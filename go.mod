@@ -3,7 +3,7 @@ module gobase
 go 1.24.1
 
 require (
-	github.com/boyane126/go-common v0.1.0
+	github.com/boyane126/go-common v0.1.1
 	gorm.io/driver/mysql v1.5.7
 	gorm.io/gorm v1.30.0
 )

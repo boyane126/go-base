@@ -7,6 +7,7 @@ import (
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	gormlogger "gorm.io/gorm/logger"
 
 	"github.com/boyane126/go-common/config"
 	"github.com/boyane126/go-common/database"
@@ -35,8 +36,19 @@ func SetupDB() {
 		log.Fatalln("database connection not supported")
 	}
 
+	// 根据环境设置日志级别
+	var logLevel gormlogger.LogLevel
+	if config.GetBool("app.debug") {
+		logLevel = gormlogger.Info // 开发环境：记录所有SQL
+	} else {
+		logLevel = gormlogger.Warn // 生产环境：只记录慢查询和错误
+	}
+
 	// 连接数据库，并设置 GORM 的日志模式
-	database.Connect(dbConfig, logger.NewGormLogger())
+	database.Connect(dbConfig, logger.NewGormLoggerWithConfig(
+		logLevel,
+		200*time.Millisecond, // 慢查询阈值
+	))
 
 	// 设置最大连接数
 	database.SQLDB.SetMaxOpenConns(config.GetInt("database.mysql.max_open_connections"))
