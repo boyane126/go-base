@@ -11,5 +11,4 @@ func Bootstrap() {
 	config.InitConfig("")
 
 	SetupLogger()
-	SetupDB()
 }
